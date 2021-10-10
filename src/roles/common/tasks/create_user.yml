@@ -1,0 +1,62 @@
+---
+- name: Ensure user exists
+  user:
+    name: "{{ item.key }}"
+    shell: "{{ default_shell if not item.value.ohmyzsh_install else vars.ohmyzsh_shell }}"
+    groups: "{{ item.value.groups }}"
+    append: yes
+    state: present
+  register: userdetails
+
+- name: Add authorized key for user
+  ansible.posix.authorized_key:
+    user: "{{ item.key }}"
+    state: present
+    key: "{{ item.value.ssh_key }}"
+  when: item.value.ssh_key is defined
+
+- name: Authorize user for passwordless sudo
+  template:
+    src: "sudoers/sudoer.j2"
+    dest: "/etc/sudoers.d/{{ item.key }}"
+    owner: "root"
+    group: "root"
+    mode: 0600
+  when: item.value.allow_sudo is defined and item.value.allow_sudo
+
+# Oh My ZSH installation
+
+- name: Derive user .zshrc path.
+  set_fact:
+    ohmyzsh_home: "{{ userdetails.home }}/{{ ohmyzsh_basedir }}"
+    ohmyzsh_zshrc_path: "{{ userdetails.home }}/.zshrc"
+  when: item.value.ohmyzsh_install
+
+- name: Clone Oh My ZSH repo for user.
+  git:
+    repo: "{{ vars.ohmyzsh_repository }}"
+    dest: "{{ ohmyzsh_home }}"
+    update: true
+    accept_hostkey: true
+    version: "master"
+  notify:
+    - Set ownership on ohmyzsh cloned repository
+  when: item.value.ohmyzsh_install
+
+- name: Check if .zshrc exists
+  stat:
+    path: "{{ ohmyzsh_zshrc_path }}"
+  changed_when: false
+  register: zshrc_stat
+  when: item.value.ohmyzsh_install
+
+- name: Template .zshrc into place if required
+  template:
+    src: "zsh/zshrc.j2"
+    dest: "{{ ohmyzsh_zshrc_path }}"
+    owner: "{{ userdetails.uid }}"
+    group: "{{ userdetails.group }}"
+    mode: 0644
+    backup: yes
+    force: "{{ item.value.ohmyzsh_force_replace_zshrc }}"
+  when: item.value.ohmyzsh_install and (item.value.ohmyzsh_force_replace_zshrc or not zshrc_stat.stat.exists)

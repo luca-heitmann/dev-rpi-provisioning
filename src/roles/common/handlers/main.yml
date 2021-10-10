@@ -1,0 +1,6 @@
+- name: Set ownership on ohmyzsh cloned repository
+  file:
+    path: "{{ ohmyzsh_home }}"
+    owner: "{{ userdetails.uid }}"
+    group: "{{ userdetails.group }}"
+    recurse: true

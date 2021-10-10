@@ -1,2 +1,0 @@
-[dev_cluster_node]
-lhe-dev ansible_connection=ssh  ansible_user=ubuntu

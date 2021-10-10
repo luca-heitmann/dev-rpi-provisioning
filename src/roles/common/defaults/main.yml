@@ -1,0 +1,7 @@
+---
+default_shell: "/bin/bash"
+
+# Oh my zsh
+ohmyzsh_shell: "/bin/zsh"
+ohmyzsh_basedir: ".oh-my-zsh"
+ohmyzsh_repository: "https://github.com/robbyrussell/oh-my-zsh.git"

@@ -1,0 +1,14 @@
+---
+all:
+  hosts:
+    lhe-dev:
+      ansible_ssh_host: 192.168.178.172
+      ansible_user: ubuntu
+  vars:
+    target_users:
+      luca:
+        groups: "admin,sudo"
+        ssh_key: https://github.com/luca-heitmann.keys
+        allow_sudo: yes
+        ohmyzsh_install: yes
+        ohmyzsh_force_replace_zshrc: no

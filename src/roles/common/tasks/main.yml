@@ -1,0 +1,10 @@
+---
+- name: Setup OS
+  include_tasks: setup_os.yml
+
+- name: Install default packages
+  include_tasks: install_default_packages.yml
+
+- name: Create user
+  include_tasks: create_user.yml
+  loop: "{{ vars.target_users | dict2items }}"
