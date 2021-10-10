@@ -1,0 +1,6 @@
+{
+    "ansible.ansible.path": "ansible-venv/bin/ansible",
+    "ansible.ansibleLint.path": "ansible-venv/bin/ansible-lint",
+    "ansible.ansiblePlaybook.path": "ansible-venv/bin/ansible-playbook",
+    "python.pythonPath": "ansible-venv/bin/python"
+}
