@@ -1,10 +1,12 @@
 ---
+# Update and install common packages
+
 - name: Update apt repo and cache
   apt:
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Upgrade all packages on servers
+- name: Upgrade all packages
   apt:
     upgrade: dist
 
@@ -28,3 +30,9 @@
     reboot_timeout: 300
     post_reboot_delay: 5
   when: reboot_required_file.stat.exists
+
+# Set hostname
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
