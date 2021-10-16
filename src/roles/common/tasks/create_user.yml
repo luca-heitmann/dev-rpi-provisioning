@@ -22,7 +22,13 @@
     owner: "root"
     group: "root"
     mode: 0600
-  when: item.value.allow_sudo is defined and item.value.allow_sudo
+  when: item.value.allow_passwordless_sudo is defined and item.value.allow_passwordless_sudo
+
+- name: Unauthorize user for passwordless sudo
+  file:
+    path: "/etc/sudoers.d/{{ item.key }}"
+    state: absent
+  when: item.value.allow_passwordless_sudo is defined and not item.value.allow_passwordless_sudo
 
 # Oh My ZSH installation
 
