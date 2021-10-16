@@ -1,6 +1,10 @@
 ---
-- name: Setup OS
-  include_tasks: setup_debian_os.yml
+- name: Upgrade OS
+  include_tasks: upgrade_debian.yml
+  when: upgrade_os
+
+- name: Configure system
+  include_tasks: configure_system.yml
 
 - name: Create user
   include_tasks: create_user.yml

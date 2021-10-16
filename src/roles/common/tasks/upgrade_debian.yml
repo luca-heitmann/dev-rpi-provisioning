@@ -38,9 +38,3 @@
     reboot_timeout: 300
     post_reboot_delay: 5
   when: reboot_required_file.stat.exists
-
-# Set hostname
-
-- name: Set hostname
-  hostname:
-    name: "{{ inventory_hostname }}"
