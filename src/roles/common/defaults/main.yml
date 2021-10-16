@@ -1,5 +1,5 @@
 ---
-upgrade_os: true
+upgrade_os: yes
 default_packages:
   - zsh
   - git
