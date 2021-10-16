@@ -1,7 +1,13 @@
 ---
 # Update and install common packages
 
-- name: Update apt repo and cache
+- name: Run do-release-upgrade
+  command: "do-release-upgrade -f DistUpgradeViewNonInteractive"
+  register: upgrade_result
+  changed_when: upgrade_result.rc == 0
+  failed_when: upgrade_result.rc != 0 and "No new release found." not in upgrade_result.stdout
+
+- name: Update apt cache
   apt:
     update_cache: yes
     cache_valid_time: 3600
@@ -12,13 +18,15 @@
 
 - name: Install common packages
   apt:
-    name:
-      - zsh
-      - git
-      - curl
-      - neovim
-      - htop
+    name: "{{ default_packages }}"
     state: present
+
+- name: Clean up apt
+  apt:
+    autoclean: yes
+    autoremove: yes
+
+# Reboot if kernel was updated
 
 - name: Check if a reboot is needed
   register: reboot_required_file

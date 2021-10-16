@@ -1,4 +1,10 @@
 ---
+default_packages:
+  - zsh
+  - git
+  - curl
+  - neovim
+  - htop
 default_shell: "/bin/bash"
 
 # Oh my zsh

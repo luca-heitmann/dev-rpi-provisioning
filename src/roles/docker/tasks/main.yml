@@ -1,3 +1,6 @@
 ---
 - name: Install docker
   include_tasks: docker_install.yml
+
+- name: Install docker compose
+  include_tasks: docker_compose_install.yml
