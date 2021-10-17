@@ -4,5 +4,5 @@
   vars:
     upgrade_os: no
   roles:
-    - common
-#    - docker
+#    - common
+    - docker

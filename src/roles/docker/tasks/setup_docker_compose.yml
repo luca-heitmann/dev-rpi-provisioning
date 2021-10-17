@@ -4,26 +4,30 @@
     cmd: "curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '\"tag_name\": \"\\K(.*)(?=\")'"
   register: docker_compose_latest_version
   changed_when: false
+  when: install_docker
 
 - name: Find current docker compose version
   command: "{{ docker_compose_path }} --version "
   register: docker_compose_current_version
   changed_when: false
   failed_when: false
+  when: install_docker
 
-- name: Delete existing docker-compose version if it's different
+- name: Delete existing docker-compose version
   file:
     path: "{{ docker_compose_path }}"
     state: absent
   when: >
-    docker_compose_current_version.stdout is defined
+    not install_docker
+    or docker_compose_current_version.stdout is defined
     and docker_compose_latest_version.stdout not in docker_compose_current_version.stdout
 
-- name: Install docker-compose if a newer version exists
+- name: Install docker-compose
   get_url: 
     url : https://github.com/docker/compose/releases/download/{{ docker_compose_latest_version.stdout }}/docker-compose-Linux-{{ ansible_architecture }}
     dest: "{{ docker_compose_path }}"
     mode: 0755
   when: >
-    docker_compose_current_version.stdout is defined
+    install_docker
+    and docker_compose_current_version.stdout is defined
     and docker_compose_latest_version.stdout not in docker_compose_current_version.stdout

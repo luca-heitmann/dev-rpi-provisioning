@@ -6,6 +6,7 @@ all:
       ansible_user: ubuntu
   vars:
     docker_repo_distro_release: "hirsute"
+    install_docker: yes
     target_users:
       luca:
         groups: "admin,docker"
