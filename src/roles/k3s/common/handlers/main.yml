@@ -1,0 +1,5 @@
+---
+- name: Reboot host
+  reboot:
+    reboot_timeout: 300
+    post_reboot_delay: 5

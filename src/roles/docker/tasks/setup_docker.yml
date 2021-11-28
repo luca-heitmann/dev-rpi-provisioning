@@ -3,12 +3,12 @@
   apt_key:
     url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
     id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
-    state: "{{ 'present' if install_docker else 'absent' }}"
+    state: "{{ docker_state }}"
 
 - name: Handle Docker Repository
   apt_repository:
     repo: deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ docker_repo_distro_release }} stable
-    state: "{{ 'present' if install_docker else 'absent' }}"
+    state: "{{ docker_state }}"
 
 - name: Install Docker apt package
   apt:
@@ -21,7 +21,7 @@
       - docker-ce
     state: present
     update_cache: yes
-  when: install_docker
+  when: docker_state == "present"
   retries: 3
   register: docker_apt_installation
   until: docker_apt_installation is success
@@ -31,5 +31,13 @@
     name: docker-ce
     state: absent
     autoremove: yes
-  when: not install_docker
-  notify: Reload systemd
+  when: docker_state == "absent"
+
+- name: Remove docker service files, binaries and data
+  file:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - /var/lib/docker
+    - /etc/docker
+  when: docker_state == "absent"

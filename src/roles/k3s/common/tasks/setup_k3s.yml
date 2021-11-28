@@ -1,0 +1,15 @@
+---
+- name: Find latest k3s version # noqa command-instead-of-module
+  shell:
+    cmd: "curl -s https://api.github.com/repos/k3s-io/k3s/releases/latest | grep -oP '\"tag_name\": \"\\K(.*)(?=\")'"
+  register: k3s_latest_version
+  changed_when: false
+
+- name: Download k3s binary
+  get_url:
+    url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_latest_version.stdout }}/k3s-{{ ansible_architecture }}"
+    checksum: "sha256:https://github.com/k3s-io/k3s/releases/download/{{ k3s_latest_version.stdout }}/sha256sum-{{ ansible_architecture }}.txt"
+    dest: /usr/local/bin/k3s
+    owner: root
+    group: root
+    mode: 0755

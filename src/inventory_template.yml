@@ -6,7 +6,7 @@ all:
       ansible_user: ubuntu
   vars:
 #    docker_repo_distro_release: "hirsute" # Override if docker repo does not support actual Ubuntu release
-#    install_docker: yes
+#    docker_state: "absent"
     target_users:
       myuser:
         groups: "admin,docker"
