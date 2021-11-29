@@ -1,9 +1,33 @@
 ## Setup dev env
 
-1. Install python: `sudo apt install python3 python3.8-venv`
-2. Create virtual env: `python3 -m venv ansible-venv`
-3. Activate virtual env: `source ansible-venv/bin/activate`
-4. Install dependencies: `python -m pip install -U pip wheel setuptools && pip install ansible openshift`
+1. Install python and dependencies:
+
+```
+sudo apt install python3 python3.8-venv
+python3 -m venv ansible-venv
+source ansible-venv/bin/activate
+python -m pip install -U pip wheel setuptools && pip install ansible openshift
+```
+
+2. Install kubectl:
+
+```
+sudo apt-get update && sudo apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+```
+
+3. Install helm:
+
+```
+curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+sudo apt-get install apt-transport-https --yes
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+```
 
 ## Installation of new RPi
 
