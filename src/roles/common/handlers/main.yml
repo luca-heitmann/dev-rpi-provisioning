@@ -1,3 +1,9 @@
+---
+- name: Reboot host
+  reboot:
+    reboot_timeout: 300
+    post_reboot_delay: 5
+
 - name: Set ownership on ohmyzsh cloned repository
   file:
     path: "{{ ohmyzsh_home }}"

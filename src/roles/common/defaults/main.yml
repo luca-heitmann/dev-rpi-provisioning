@@ -6,6 +6,7 @@ default_packages:
   - curl
   - neovim
   - htop
+  - linux-modules-extra-raspi # https://www.mail-archive.com/ubuntu-bugs@lists.ubuntu.com/msg5968593.html
 
 default_shell: "/bin/bash"
 

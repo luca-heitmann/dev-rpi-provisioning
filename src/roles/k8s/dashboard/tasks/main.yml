@@ -1,0 +1,6 @@
+---
+- name: Apply dashboard manifest to the cluster
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: "{{ dashboard_state }}"
+    definition: "{{ lookup('file', 'dashboard.yml') }}"

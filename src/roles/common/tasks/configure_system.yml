@@ -2,3 +2,4 @@
 - name: Set hostname
   hostname:
     name: "{{ inventory_hostname }}"
+  notify: Reboot host

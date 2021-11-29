@@ -1,15 +1,14 @@
 ---
 all:
   hosts:
-    lhe-dev:
+    lhe-dev-2:
       ansible_ssh_host: 192.168.178.172
       ansible_user: ubuntu
   vars:
-    docker_repo_distro_release: "hirsute"
-    docker_state: "absent"
+    cluster_name: lhe-dev
     target_users:
       luca:
-        groups: "admin,docker"
+        groups: "admin"
         ssh_key: https://github.com/luca-heitmann.keys
         allow_passwordless_sudo: yes
         ohmyzsh_install: yes

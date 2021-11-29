@@ -1,4 +1,4 @@
 ---
 docker_state: "absent"
 docker_compose_path: "/usr/local/bin/docker-compose"
-docker_repo_distro_release: "{{ ansible_distribution_release }}"
+docker_apt_repo_release: "{{ ansible_distribution_release }}"

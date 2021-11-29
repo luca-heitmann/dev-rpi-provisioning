@@ -9,3 +9,5 @@
 - name: Create user
   include_tasks: create_user.yml
   loop: "{{ vars.target_users | dict2items }}"
+  loop_control:
+    loop_var: user

@@ -1,0 +1,2 @@
+---
+kubeconfig: "{{ kubeconfig_path | default(playbook_dir) }}/{{ cluster_name }}-kubeconfig"

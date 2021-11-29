@@ -1,9 +1,9 @@
 ---
 - hosts: all
   become: yes
-  vars:
-    upgrade_os: no
   roles:
+    - common
+    - k3s/common
     - k3s/server
 
 - name: Add cluster features

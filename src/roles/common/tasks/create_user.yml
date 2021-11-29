@@ -1,34 +1,40 @@
 ---
+- name: Ensure groups exists
+  group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ user.value.groups.split(',') }}"
+
 - name: Ensure user exists
   user:
-    name: "{{ item.key }}"
-    shell: "{{ default_shell if not item.value.ohmyzsh_install else vars.ohmyzsh_shell }}"
-    groups: "{{ item.value.groups }}"
+    name: "{{ user.key }}"
+    shell: "{{ default_shell if not user.value.ohmyzsh_install else vars.ohmyzsh_shell }}"
+    groups: "{{ user.value.groups }}"
     append: yes
     state: present
   register: userdetails
 
 - name: Add authorized key for user
   ansible.posix.authorized_key:
-    user: "{{ item.key }}"
+    user: "{{ user.key }}"
     state: present
-    key: "{{ item.value.ssh_key }}"
-  when: item.value.ssh_key is defined
+    key: "{{ user.value.ssh_key }}"
+  when: user.value.ssh_key is defined
 
 - name: Authorize user for passwordless sudo
   template:
     src: "sudoers/sudoer.j2"
-    dest: "/etc/sudoers.d/{{ item.key }}"
+    dest: "/etc/sudoers.d/{{ user.key }}"
     owner: "root"
     group: "root"
     mode: 0600
-  when: item.value.allow_passwordless_sudo is defined and item.value.allow_passwordless_sudo
+  when: user.value.allow_passwordless_sudo is defined and user.value.allow_passwordless_sudo
 
 - name: Unauthorize user for passwordless sudo
   file:
-    path: "/etc/sudoers.d/{{ item.key }}"
+    path: "/etc/sudoers.d/{{ user.key }}"
     state: absent
-  when: item.value.allow_passwordless_sudo is defined and not item.value.allow_passwordless_sudo
+  when: user.value.allow_passwordless_sudo is defined and not user.value.allow_passwordless_sudo
 
 # Oh My ZSH installation
 
@@ -36,7 +42,7 @@
   set_fact:
     ohmyzsh_home: "{{ userdetails.home }}/{{ ohmyzsh_basedir }}"
     ohmyzsh_zshrc_path: "{{ userdetails.home }}/.zshrc"
-  when: item.value.ohmyzsh_install
+  when: user.value.ohmyzsh_install
 
 - name: Clone Oh My ZSH repo for user.
   git:
@@ -47,14 +53,14 @@
     version: "master"
   notify:
     - Set ownership on ohmyzsh cloned repository
-  when: item.value.ohmyzsh_install
+  when: user.value.ohmyzsh_install
 
 - name: Check if .zshrc exists
   stat:
     path: "{{ ohmyzsh_zshrc_path }}"
   changed_when: false
   register: zshrc_stat
-  when: item.value.ohmyzsh_install
+  when: user.value.ohmyzsh_install
 
 - name: Template .zshrc into place if required
   template:
@@ -64,5 +70,5 @@
     group: "{{ userdetails.group }}"
     mode: 0644
     backup: yes
-    force: "{{ item.value.ohmyzsh_force_replace_zshrc }}"
-  when: item.value.ohmyzsh_install and (item.value.ohmyzsh_force_replace_zshrc or not zshrc_stat.stat.exists)
+    force: "{{ user.value.ohmyzsh_force_replace_zshrc }}"
+  when: user.value.ohmyzsh_install and (user.value.ohmyzsh_force_replace_zshrc or not zshrc_stat.stat.exists)

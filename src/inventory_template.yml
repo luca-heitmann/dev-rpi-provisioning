@@ -5,8 +5,6 @@ all:
       ansible_ssh_host: 192.168.178.xxx
       ansible_user: ubuntu
   vars:
-#    docker_repo_distro_release: "hirsute" # Override if docker repo does not support actual Ubuntu release
-#    docker_state: "absent"
     target_users:
       myuser:
         groups: "admin,docker"
@@ -14,3 +12,7 @@ all:
         allow_passwordless_sudo: yes
         ohmyzsh_install: yes
 #        ohmyzsh_force_replace_zshrc: no # If yes, a new zshrc will be created
+#    docker_apt_repo_release: "hirsute" # Override if docker repo does not support actual Ubuntu release
+#    docker_state: "present"
+#    k3s_state: "present"
+#    dashboard_state: "present"
